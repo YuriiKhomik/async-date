@@ -1,22 +1,12 @@
 {
-  "name": "async-date",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "npx parcel src/index.html"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/YuriiKhomik/async-date.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/YuriiKhomik/async-date/issues"
-  },
-  "homepage": "https://github.com/YuriiKhomik/async-date#readme",
   "devDependencies": {
     "parcel": "^2.7.0"
+  },
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "dependencies": {
+    "bootstrap.native": "^4.2.0"
   }
 }
