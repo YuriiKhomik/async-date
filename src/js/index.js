@@ -210,24 +210,185 @@
 // };
 
 
-// // THE SAME TIMER BUT WITH DESTRUCTURIZATION + VIA new Date
-const timer = {
-    start() {
-        const startTime = Date.now();
-        setInterval(() => {
-            const currentTime = Date.now();
-            const deltaTime = currentTime - startTime;
-            const { hours, mins, secs } = getTimeComponents(deltaTime);
+// // THE SAME TIMER BUT WITH DESTRUCTURIZATION + VIA new Date (ne zovsim ok varik)
+// const timer = {
+//     start() {
+//         const startTime = Date.now();
+//         setInterval(() => {
+//             const currentTime = Date.now();
+//             const deltaTime = currentTime - startTime;
+//             const { hours, mins, secs } = getTimeComponents(deltaTime);
 
-            // console.log(`${hours}:${mins}:${secs}`);
+//             // console.log(`${hours}:${mins}:${secs}`);
 
-            console.log(`${pad(new Date(deltaTime).getUTCHours())}:${pad(new Date(deltaTime).getMinutes())}:${pad(new Date(deltaTime).getSeconds())}`);
+//             console.log(`${pad(new Date(deltaTime).getUTCHours())}:${pad(new Date(deltaTime).getMinutes())}:${pad(new Date(deltaTime).getSeconds())}`);
 
-        }, 1000)
-    },
+//         }, 1000)
+//     },
+// };
+
+// timer.start();
+
+// function pad(value) {
+//     return String(value).padStart(2, '0');
+// };
+
+// function getTimeComponents(time) {
+//     const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+//     const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+//     const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+
+//     return { hours, mins, secs };
+// };
+
+
+// // TIMER WITH HTML
+
+// const refs = {
+//     startBtn: document.querySelector('button[data-action-start]'),
+//     stopBtn: document.querySelector('button[data-action-stop]'),
+//     clockFace: document.querySelector('.js-clockface'),
+// };
+
+// const timer = {
+//     intervalId: null,
+//     isActive: false,
+//     start() {
+//         // якщо ми запускаємо таймер, а він вже активний - то ми просто виходимо з цього коду
+//         if (this.isActive) {
+//             return
+//         }
+
+//         const startTime = Date.now();
+//         this.isActive = true;
+//         this.intervalId = setInterval(() => {
+//             const currentTime = Date.now();
+//             const deltaTime = currentTime - startTime;
+//             const time = getTimeComponents(deltaTime);
+
+//             updateClockFace(time)
+
+//             // console.log(`${hours}:${mins}:${secs}`);
+//         }, 1000)
+//     },
+//     stop() {
+//         clearInterval(this.intervalId);
+//         this.isActive = false;
+//     }
+// };
+
+
+// refs.startBtn.addEventListener('click', () => {
+//     timer.start()
+// });
+// refs.stopBtn.addEventListener('click', () => {
+//     timer.stop();
+// })
+
+// function updateClockFace({ hours, mins, secs }) {
+//     refs.clockFace.textContent = `${hours}:${mins}:${secs}`;
+// };
+
+// function pad(value) {
+//     return String(value).padStart(2, '0');
+// };
+
+// function getTimeComponents(time) {
+//     const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+//     const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+//     const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+
+//     return { hours, mins, secs };
+// };
+
+
+// TIMER WITH HTML AN WITH CLASS
+
+const refs = {
+    startBtn: document.querySelector('button[data-action-start]'),
+    stopBtn: document.querySelector('button[data-action-stop]'),
+    clockFace: document.querySelector('.js-clockface'),
 };
 
-timer.start();
+
+// class не повинен нічого знати про зовнішні функції
+// зовнішні функції - це малювання інтерфейсу
+// а клас - це модель даних
+class Timer {
+    constructor({onTick}) {
+        this.intervalId = null;
+        this.isActive = false;
+        this.onTick = onTick;
+
+        this.init();
+    }
+
+    init() {
+        const time = this.getTimeComponents(0);
+        this.onTick(time);
+    }
+
+    start() {
+        // якщо ми запускаємо таймер, а він вже активний - то ми просто виходимо з цього коду
+        if (this.isActive) {
+            return
+        }
+
+        const startTime = Date.now();
+        this.isActive = true;
+
+        this.intervalId = setInterval(() => {
+            const currentTime = Date.now();
+            const deltaTime = currentTime - startTime;
+            const time = this.getTimeComponents(deltaTime);
+
+            this.onTick(time)
+
+        }, 1000)
+    }
+
+    stop() {
+        clearInterval(this.intervalId);
+        this.isActive = false;
+        const time = this.getTimeComponents(0);
+        this.onTick(time);
+    }
+
+    pad(value) {
+    return String(value).padStart(2, '0');
+    };
+
+    getTimeComponents(time) {
+    const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+
+    return { hours, mins, secs };
+    };
+
+}
+
+const timer = new Timer({
+    onTick: updateClockFace
+});
+
+
+// refs.startBtn.addEventListener('click', () => {
+//     timer.start()
+// });
+// refs.stopBtn.addEventListener('click', () => {
+//     timer.stop();
+// });
+
+// OR:
+refs.startBtn.addEventListener('click', timer.start.bind(timer));
+refs.stopBtn.addEventListener('click', timer.stop.bind(timer));
+
+
+
+function updateClockFace({ hours, mins, secs }) {
+    refs.clockFace.textContent = `${hours}:${mins}:${secs}`;
+};
 
 function pad(value) {
     return String(value).padStart(2, '0');
