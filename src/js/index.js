@@ -664,19 +664,114 @@
 // використання промісів чистить наші функції, тому що вони не знають про той код, який їх викликає
 // але якщо нам потрібно опрацювати лише onSuccess, то для цього є статичний метод promise.Resolve:
 
-const makeOrder = (dish, onSuccess) => {
-    return Promise.resolve(`here yours ${dish}`)
+// const makeOrder = (dish, onSuccess) => {
+//     return Promise.resolve(`here yours ${dish}`)
+// };
+
+
+// makeOrder('holubtsi').then(onMakeOrderSuccess)
+
+// function onMakeOrderSuccess(result) {
+//     console.log('onMakeOrderSuccess');
+//     console.log(result);
+// };
+
+// function onMakeOrderError(error) {
+//     console.log('onMakeOrderError');
+//     console.log(error);
+// };
+
+
+// // ВИТЯГУЄМО ПОКЕМОНІВ ІЗ БЕКЕНДУ
+// такий приклад не ок, потрібно забрати обробку результату з цієї фкнеції
+// const fetchPokemonById = id => {
+//     fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+//         .then(r => r.json())
+//         .then(pokemon => {
+//             console.log(pokemon);
+//         })
+//         .catch(error => {
+
+//         });
+// };
+
+// fetchPokemonById(1);
+// fetchPokemonById(2);
+// fetchPokemonById(3);
+
+
+// робимо так:
+// але так теж не ок, бо фенкція знає про якісь он саксесс і он еррор
+// ми хочемо, щобт фенкція повертала проміс, а ми вже до нього чіпляли колбеки
+// const fetchPokemonById = (id, onSuccess, onError) => {
+//     fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+//         .then(r => r.json())
+//         .then(pokemon => {
+//             onSuccess(pokemon);
+//         })
+//         .catch(error => {
+//             onError(error);
+//         });
+// };
+
+// fetchPokemonById(1, onFetchSuccess, onFetchError);
+// // fetchPokemonById(2);
+// // fetchPokemonById(3);
+
+
+// function onFetchSuccess(pokemon) {
+//     console.log(pokemon);
+// };
+
+// function onFetchError(error) {
+//     console.log('this is in a "catch" block');
+//     console.log(error);
+// }
+
+
+// // // ТОМУ РОБИМО ОТАК:
+// // fetch типу повертає New promise:
+// // function fetch(url) {
+// //     return new Promise(...)
+// // }
+// const fetchPokemonById = (id) => {
+//     return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.json())
+// };
+
+// // ми опрацьовуємо результат функції в своєму коді, а не всередині фкнкції за разунок колбеків
+// // результат промісу не можна отримати ніде, окрім ось цих функцій
+// fetchPokemonById(1).then(onFetchSuccess).catch(onFetchError);
+// fetchPokemonById(2).then(onFetchSuccess).catch(onFetchError);
+// fetchPokemonById(3).then(onFetchSuccess).catch(onFetchError);
+
+// // ці функції будуть виконуватись асинхронно, колись потім
+// // коли ця фенкція або ресолвнеться або реджектниться
+// // а значить доступ до його результату можна отримати лише тоді, коли ці фукції буьуть викликатись
+// // іншим чином дати результат промісу у зовнішній код неможливо
+// function onFetchSuccess(pokemon) {
+//     console.log(pokemon);
+// };
+
+// function onFetchError(error) {
+//     console.log('this is in a "catch" block');
+//     console.log(error);
+// };
+
+ 
+
+// ONE MORE PROMISE
+
+const makePromise = () => {
+    return new Promise((resolve, reject) => {
+        const passed = Math.random() > 0.5;
+        setTimeout(() => {
+            if (passed) {
+                resolve('hey, its resolve');
+            }
+
+            reject('doh, its reject');
+        }, 2000);
+    });
 };
 
-
-makeOrder('holubtsi').then(onMakeOrderSuccess)
-
-function onMakeOrderSuccess(result) {
-    console.log('onMakeOrderSuccess');
-    console.log(result);
-};
-
-function onMakeOrderError(error) {
-    console.log('onMakeOrderError');
-    console.log(error);
-};
+makePromise().then(result=>console.log(result)).catch(error=>console.log(error))
