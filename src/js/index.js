@@ -302,102 +302,218 @@
 // };
 
 
-// TIMER WITH HTML AN WITH CLASS
+// // TIMER WITH HTML AN WITH CLASS
 
-const refs = {
-    startBtn: document.querySelector('button[data-action-start]'),
-    stopBtn: document.querySelector('button[data-action-stop]'),
-    clockFace: document.querySelector('.js-clockface'),
-};
+// const refs = {
+//     startBtn: document.querySelector('button[data-action-start]'),
+//     stopBtn: document.querySelector('button[data-action-stop]'),
+//     clockFace: document.querySelector('.js-clockface'),
+// };
 
 
-// class не повинен нічого знати про зовнішні функції
-// зовнішні функції - це малювання інтерфейсу
-// а клас - це модель даних
-class Timer {
-    constructor({onTick}) {
-        this.intervalId = null;
-        this.isActive = false;
-        this.onTick = onTick;
+// // class не повинен нічого знати про зовнішні функції
+// // зовнішні функції - це малювання інтерфейсу
+// // а клас - це модель даних
+// class Timer {
+//     constructor({onTick}) {
+//         this.intervalId = null;
+//         this.isActive = false;
+//         this.onTick = onTick;
 
-        this.init();
-    }
+//         this.init();
+//     }
 
-    init() {
-        const time = this.getTimeComponents(0);
-        this.onTick(time);
-    }
+//     init() {
+//         const time = this.getTimeComponents(0);
+//         this.onTick(time);
+//     }
 
-    start() {
-        // якщо ми запускаємо таймер, а він вже активний - то ми просто виходимо з цього коду
-        if (this.isActive) {
-            return
+//     start() {
+//         // якщо ми запускаємо таймер, а він вже активний - то ми просто виходимо з цього коду
+//         if (this.isActive) {
+//             return
+//         }
+
+//         const startTime = Date.now();
+//         this.isActive = true;
+
+//         this.intervalId = setInterval(() => {
+//             const currentTime = Date.now();
+//             const deltaTime = currentTime - startTime;
+//             const time = this.getTimeComponents(deltaTime);
+
+//             this.onTick(time)
+
+//         }, 1000)
+//     }
+
+//     stop() {
+//         clearInterval(this.intervalId);
+//         this.isActive = false;
+//         const time = this.getTimeComponents(0);
+//         this.onTick(time);
+//     }
+
+//     pad(value) {
+//     return String(value).padStart(2, '0');
+//     };
+
+//     getTimeComponents(time) {
+//     const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+//     const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+//     const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+
+//     return { hours, mins, secs };
+//     };
+
+// }
+
+// const timer = new Timer({
+//     onTick: updateClockFace
+// });
+
+
+// // refs.startBtn.addEventListener('click', () => {
+// //     timer.start()
+// // });
+// // refs.stopBtn.addEventListener('click', () => {
+// //     timer.stop();
+// // });
+
+// // OR:
+// refs.startBtn.addEventListener('click', timer.start.bind(timer));
+// refs.stopBtn.addEventListener('click', timer.stop.bind(timer));
+
+
+
+// function updateClockFace({ hours, mins, secs }) {
+//     refs.clockFace.textContent = `${hours}:${mins}:${secs}`;
+// };
+
+// function pad(value) {
+//     return String(value).padStart(2, '0');
+// };
+
+// function getTimeComponents(time) {
+//     const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+//     const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+//     const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+
+//     return { hours, mins, secs };
+// };
+
+
+
+// // PROMISES
+
+
+// const promise = new Promise((resolve, reject) => {
+//     const canFulFill = Math.random() > 0.5;
+
+//     setTimeout(() => {
+//         if (canFulFill) {
+//         resolve('Alles gut! Проміс виконався успішно із результатом (fulfilled)')
+//         }
+
+//         reject('Caput! Проміс виконався із помилкою (rejected)');
+//     }, 1000);
+// });
+
+// // then приймає два аргументи: перший - resolve, другий - reject
+// // promise.then(
+// //     result => { console.log(result); },
+// //     error => { console.log(error); },
+// // );
+// // OR
+// promise.then(onFulFilled, onRejected);
+
+// function onFulFilled(result) {
+//     console.log(result);
+// };
+
+// function onRejected(error) {
+//     console.log(error)
+// };
+
+
+// // PROMISE CHAINING
+
+
+// const promise = new Promise((resolve, reject) => {
+//     const canFulFill = Math.random() > 0.5;
+
+//     setTimeout(() => {
+//         if (canFulFill) {
+//         resolve('Alles gut! Проміс виконався успішно із результатом (fulfilled)')
+//         }
+
+//         reject('Caput! Проміс виконався із помилкою (rejected)');
+//     }, 1000);
+// });
+
+// // // then на своє місце повертає проміс, якщо цей проміс виконується успішно,
+// // //  то результатом виконання проміса буде те, що ця функція повертає
+// // // себто, якщо ми повертаємо 5, то наступний then прийме 5 як результат виконання попереднього then
+// // // себто, те, що повертає onSuccess в then - буде результатом виконання наступного проміса
+// promise.then(
+//     result => {
+//         console.log(result);
+//         return 5;
+//     },
+    
+// ).then(x => {
+//     console.log(x);
+// });
+
+
+// ERROR HANDLING
+
+
+const promise = new Promise((resolve, reject) => {
+    const canFulFill = Math.random() > 0.5;
+
+    setTimeout(() => {
+        if (canFulFill) {
+        resolve('Alles gut! Проміс виконався успішно із результатом (fulfilled)')
         }
 
-        const startTime = Date.now();
-        this.isActive = true;
-
-        this.intervalId = setInterval(() => {
-            const currentTime = Date.now();
-            const deltaTime = currentTime - startTime;
-            const time = this.getTimeComponents(deltaTime);
-
-            this.onTick(time)
-
-        }, 1000)
-    }
-
-    stop() {
-        clearInterval(this.intervalId);
-        this.isActive = false;
-        const time = this.getTimeComponents(0);
-        this.onTick(time);
-    }
-
-    pad(value) {
-    return String(value).padStart(2, '0');
-    };
-
-    getTimeComponents(time) {
-    const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
-
-    return { hours, mins, secs };
-    };
-
-}
-
-const timer = new Timer({
-    onTick: updateClockFace
+        reject('Caput! Проміс виконався із помилкою (rejected)');
+    }, 1000);
 });
 
+// // якщо проміс виконався із результатом rejected, то catch  в кінці ланцюжка then буде ловити цю помилку
+// // як і всі інші помилки, які можуть виникнути на цьому ланцюжку
+// // це зручніше, ніж до кожного then прописувати і fulfilled i rejected
+// // тобто якщо на якомусь етапі виникає помилка, то ланцюжок переривається і результат перетається в catch
+// // себто, ми в then опрацблвуємо лише успішне виконання проміса
+// // а неуспішне виносимо в catch (для прикладу можна розкоментувати ерору на 2 then)
 
-// refs.startBtn.addEventListener('click', () => {
-//     timer.start()
-// });
-// refs.stopBtn.addEventListener('click', () => {
-//     timer.stop();
-// });
+// promise
+//     .then(onFulFilled)
+//     .then(
+//         x => {
+//             console.log(x);
 
-// OR:
-refs.startBtn.addEventListener('click', timer.start.bind(timer));
-refs.stopBtn.addEventListener('click', timer.stop.bind(timer));
+//             throw new Error('error in 2nd "then"')
+        
+//             return 10;
+//         },)
+//     .then(y => {
+//         console.log(y);
+//     })
+//     .catch(error => console.log(error))
+// // в блоці finally немає параметрів, тому що ми не знаємо, чи буде успішно чи не успішно виконається проміс
+//     .finally(() => console.log('я буду виконаний в будь-якому випадку ха-ха-ха'))
+
+
+// function onFulFilled(result) {
+//     console.log(result);
+// };
+
+// function onRejected(error) {
+//     console.log(error)
+// };
 
 
 
-function updateClockFace({ hours, mins, secs }) {
-    refs.clockFace.textContent = `${hours}:${mins}:${secs}`;
-};
 
-function pad(value) {
-    return String(value).padStart(2, '0');
-};
-
-function getTimeComponents(time) {
-    const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-    const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
-
-    return { hours, mins, secs };
-};
