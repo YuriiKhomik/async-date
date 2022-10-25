@@ -603,25 +603,73 @@
 
 
 // // variant bez zminnykh 
-const makeOrder = (dish) => {
-    const DELAY = 1000;
+// const makeOrder = (dish) => {
+//     const DELAY = 1000;
 
-    return new Promise((resolve, reject) => {
-        const passed = Math.random() > 0.5;
+//     return new Promise((resolve, reject) => {
+//         const passed = Math.random() > 0.5;
 
-        setTimeout(() => {
-            if (passed) {
-            resolve(`here yours ${dish}`)
-            }
+//         setTimeout(() => {
+//             if (passed) {
+//             resolve(`here yours ${dish}`)
+//             }
 
-            reject(`sori nits ne vyide, ${dish} vidsutniy`);
+//             reject(`sori nits ne vyide, ${dish} vidsutniy`);
 
-        }, DELAY);
-    });
+//         }, DELAY);
+//     });
+// };
+
+
+// makeOrder('holubtsi').then(onMakeOrderSuccess).catch(onMakeOrderError);
+
+// function onMakeOrderSuccess(result) {
+//     console.log('onMakeOrderSuccess');
+//     console.log(result);
+// };
+
+// function onMakeOrderError(error) {
+//     console.log('onMakeOrderError');
+//     console.log(error);
+// };
+
+
+// // a teper synchronnyi code, bez delay
+// // себто, промісифікуємо функцію, яка буде виконуватись миттєво
+
+// const makeOrder = (dish, onSuccess, onError) => {
+//     return new Promise((resolve, reject) => {
+//         const passed = Math.random() > 0.5;
+
+//         if(passed) {
+//             resolve(`here yours ${dish}`);
+//         }
+//         reject(`sori nits ne vyide, ${dish} vidsutniy`);
+//     })
+// };
+
+
+// makeOrder('holubtsi').then(onMakeOrderSuccess).catch(onMakeOrderError);
+
+// function onMakeOrderSuccess(result) {
+//     console.log('onMakeOrderSuccess');
+//     console.log(result);
+// };
+
+// function onMakeOrderError(error) {
+//     console.log('onMakeOrderError');
+//     console.log(error);
+// };
+
+// використання промісів чистить наші функції, тому що вони не знають про той код, який їх викликає
+// але якщо нам потрібно опрацювати лише onSuccess, то для цього є статичний метод promise.Resolve:
+
+const makeOrder = (dish, onSuccess) => {
+    return Promise.resolve(`here yours ${dish}`)
 };
 
 
-makeOrder('holubtsi').then(onMakeOrderSuccess).catch(onMakeOrderError);
+makeOrder('holubtsi').then(onMakeOrderSuccess)
 
 function onMakeOrderSuccess(result) {
     console.log('onMakeOrderSuccess');
@@ -632,4 +680,3 @@ function onMakeOrderError(error) {
     console.log('onMakeOrderError');
     console.log(error);
 };
-
