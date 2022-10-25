@@ -469,17 +469,17 @@
 // ERROR HANDLING
 
 
-const promise = new Promise((resolve, reject) => {
-    const canFulFill = Math.random() > 0.5;
+// const promise = new Promise((resolve, reject) => {
+//     const canFulFill = Math.random() > 0.5;
 
-    setTimeout(() => {
-        if (canFulFill) {
-        resolve('Alles gut! Проміс виконався успішно із результатом (fulfilled)')
-        }
+//     setTimeout(() => {
+//         if (canFulFill) {
+//         resolve('Alles gut! Проміс виконався успішно із результатом (fulfilled)')
+//         }
 
-        reject('Caput! Проміс виконався із помилкою (rejected)');
-    }, 1000);
-});
+//         reject('Caput! Проміс виконався із помилкою (rejected)');
+//     }, 1000);
+// });
 
 // // якщо проміс виконався із результатом rejected, то catch  в кінці ланцюжка then буде ловити цю помилку
 // // як і всі інші помилки, які можуть виникнути на цьому ланцюжку
@@ -515,5 +515,121 @@ const promise = new Promise((resolve, reject) => {
 // };
 
 
+// // PROMICIFICATION OF FUNCTION
 
+
+// // FUNCTION WITHOUT PROMICES
+// // на виклику makeOrder пиріжок йде в діш, саксес в саксес а ерор в ерор
+// // нам би хотілось, щоби результат цієї функції ми отримували у зовнішньому коді
+// // не закидувати свої функці кудись всередину
+// // проблема такого коду в тому, що функція makeOrder замість того, щоби просто опрацбовувати замовлення
+// // вона знає про якісь колбеки onSuccess і onError, робить якісь перевірки
+// // тобто ця функція знає надто багато про те оточення, яке буде її викликати
+// // це називається звязаність коду і це не дуже ок
+// //  саме для цього придумали проміси, щоби позбутися колбеків
+
+// const makeOrder = (dish, onSuccess, onError) => {
+//     const DELAY = 1000;
+
+//     const passed = Math.random() > 0.5;
+
+//     setTimeout(() => {
+//         if (passed) {
+//             onSuccess(`here yours ${dish}`) 
+//         } else {
+//             onError(`sori nits nr vyide, ${dish} vidsutniy`)
+//         }
+//     }, DELAY)
+// };
+
+// makeOrder('pyrizhok', onMakeOrderSuccess, onMakeOrderError);
+
+
+// function onMakeOrderSuccess(result) {
+//     console.log('onMakeOrderSuccess');
+//     console.log(result);
+// };
+
+// function onMakeOrderError(error) {
+//     console.log('onMakeOrderError');
+//     console.log(error);
+// };
+
+
+// // TEPER ROBYMO IZ PROMISAMY
+
+// // тепер наша функція не знає про той код, який її викликає
+// // вона тепер дає проміс, а ми тепер чіпляємось до нього через any та catch
+// // 
+
+// // variant iz zminnymy
+// const makeOrder = (dish) => {
+//     const DELAY = 1000;
+
+//     const promise = new Promise((resolve, reject) => {
+//         const passed = Math.random() > 0.5;
+
+//         setTimeout(() => {
+//             if (passed) {
+//             resolve(`here yours ${dish}`)
+//             }
+
+//             reject(`sori nits ne vyide, ${dish} vidsutniy`);
+
+//         }, DELAY);
+//     });
+//     return promise
+// };
+
+// const p = makeOrder('holubtsi');
+ 
+// p.then(onMakeOrderSuccess).catch(onMakeOrderError)
+
+// function onMakeOrderSuccess(result) {
+//     console.log('onMakeOrderSuccess');
+//     console.log(result);
+// };
+
+// function onMakeOrderError(error) {
+//     console.log('onMakeOrderError');
+//     console.log(error);
+// };
+
+
+
+
+
+
+
+
+// // variant bez zminnykh 
+const makeOrder = (dish) => {
+    const DELAY = 1000;
+
+    return new Promise((resolve, reject) => {
+        const passed = Math.random() > 0.5;
+
+        setTimeout(() => {
+            if (passed) {
+            resolve(`here yours ${dish}`)
+            }
+
+            reject(`sori nits ne vyide, ${dish} vidsutniy`);
+
+        }, DELAY);
+    });
+};
+
+
+makeOrder('holubtsi').then(onMakeOrderSuccess).catch(onMakeOrderError);
+
+function onMakeOrderSuccess(result) {
+    console.log('onMakeOrderSuccess');
+    console.log(result);
+};
+
+function onMakeOrderError(error) {
+    console.log('onMakeOrderError');
+    console.log(error);
+};
 
