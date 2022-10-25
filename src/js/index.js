@@ -113,3 +113,130 @@
 // };
 
 
+// DATE
+
+// // новий екземпляр ми створюємо тоді, коли потрібно працювати із його методами
+
+// const date1 = new Date().getTime();
+// console.log('date1: ', date1);
+
+// setTimeout(() => {
+//     const date2 = new Date().getTime();
+
+//     console.log('date1: ', date1);
+//     console.log('date2: ', date2);
+
+//     console.log(date2-date1)
+// }, 3000);
+
+// // але якщо потрібно достукатись лише до UNIX, краще не створювати лайві об'єкти, оскільки це може вплинути на продуктивність
+// // для того, зоб отримати актуальний unix час - є Date.now:
+
+// const date1 = Date.now();
+// console.log('date1: ', date1);
+
+// setTimeout(() => {
+//     const date2 = Date.now();
+
+//     console.log('date1: ', date1);
+//     console.log('date2: ', date2);
+
+//     console.log(date2 - date1)
+// }, 3000);
+
+
+// // TIMER
+
+// const timer = {
+//     start() {
+//         const startTime = Date.now();
+//         setInterval(() => {
+//             const currentTime = Date.now();
+//             const deltaTime = currentTime - startTime;
+//             const timeComponents = getTimeComponents(deltaTime);
+
+//             console.log(timeComponents)
+//         }, 1000)
+//     },
+// };
+
+// timer.start();
+
+
+// // приймає число, приводить його до рядка і додає на початок рядка "0", якщо чило менше 2-х знаків
+// function pad(value) {
+//     return String(value).padStart(2, '0');
+// };
+
+// // приймає час в мілісекундах
+// // вираховує, скільки в них влізається годин, хвилин та секунд
+// // повертає об'єкт з властивостями hours, mins, secs
+
+// function getTimeComponents(time) {
+//     const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+//     const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+//     const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+
+//     return { hours, mins, secs };
+// };
+
+// // THE SAME TIMER BUT WITH DESTRUCTURIZATION
+
+// const timer = {
+//     start() {
+//         const startTime = Date.now();
+//         setInterval(() => {
+//             const currentTime = Date.now();
+//             const deltaTime = currentTime - startTime;
+//             const { hours, mins, secs } = getTimeComponents(deltaTime);
+
+//             console.log(`${hours}:${mins}:${secs}`);
+//         }, 1000)
+//     },
+// };
+
+// timer.start();
+
+// function pad(value) {
+//     return String(value).padStart(2, '0');
+// };
+
+// function getTimeComponents(time) {
+//     const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+//     const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+//     const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+
+//     return { hours, mins, secs };
+// };
+
+
+// // THE SAME TIMER BUT WITH DESTRUCTURIZATION + VIA new Date
+const timer = {
+    start() {
+        const startTime = Date.now();
+        setInterval(() => {
+            const currentTime = Date.now();
+            const deltaTime = currentTime - startTime;
+            const { hours, mins, secs } = getTimeComponents(deltaTime);
+
+            // console.log(`${hours}:${mins}:${secs}`);
+
+            console.log(`${pad(new Date(deltaTime).getUTCHours())}:${pad(new Date(deltaTime).getMinutes())}:${pad(new Date(deltaTime).getSeconds())}`);
+
+        }, 1000)
+    },
+};
+
+timer.start();
+
+function pad(value) {
+    return String(value).padStart(2, '0');
+};
+
+function getTimeComponents(time) {
+    const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+    const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+
+    return { hours, mins, secs };
+};
