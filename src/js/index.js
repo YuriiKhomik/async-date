@@ -889,7 +889,167 @@
 // });
 
 
-// ЗАПУСКАЄМО ДЕКІЛЬКА ОДНОЧАСНО І ВИВОДИМО ВСІХ КОНЕЙ
+// // ЗАПУСКАЄМО ДЕКІЛЬКА ОДНОЧАСНО І ВИВОДИМО ВСІХ КОНЕЙ
+
+// const horses = [
+//     'Tsok-Tsok',
+//     'Secretariat',
+//     'Eclipse',
+//     'West Australian',
+//     'Flying Fox',
+//     'Seabisquit',
+//     'Vista'
+// ];
+
+// function run(horse) {
+//     return new Promise((resolve) => {
+//         const time = getRandomTime(2000, 3500);
+
+//         setTimeout(() => {
+//             resolve({horse, time})
+//         }, time)
+//     })
+// };
+
+// console.log(`%c Race started. Bids are disabled`, 'color: red; font-size: 11px;');
+
+// const promises = horses.map(run);
+
+// function getRandomTime(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1) + min);
+// };
+
+// Promise.race(promises).then(({ horse, time }) => {
+//     console.log(`%c And winner is ${horse}, finished in ${time} seconds`, 'color: green; font-size: 11px;')
+// });
+
+// // // виводимо об'єкт із усіма промісами
+// // Promise.all(promises).then(x => { console.log(x) });
+// // // або виводимо в консоль повідомлення
+// // // проміс олл чекає, поки виконаються всі проміси і тоді дає результат виконання всіх промісів
+// Promise.all(promises).then(() => {
+//     console.log(`%c Race finished. Bids are allowed`, 'color: blue; font-size: 11px;')
+// });
+
+
+// // IPPODROME INTO HTML
+
+// const horses = [
+//     'Tsok-Tsok',
+//     'Secretariat',
+//     'Eclipse',
+//     'West Australian',
+//     'Flying Fox',
+//     'Seabisquit',
+//     'Vista'
+// ];
+
+// const refs = {
+//     startBtn: document.querySelector('.js-race-btn'),
+//     winnerField: document.querySelector('.js-winner'),
+//     progressField: document.querySelector('.js-progress'),
+//     tableBody: document.querySelector('.js-results-table > tbody'),
+// };
+
+// refs.startBtn.addEventListener('click', () => {
+//     const promises = horses.map(run);
+
+//     refs.winnerField.textContent = '';
+
+//     refs.progressField.textContent = 'Race started. Bids are disabled';
+
+//     Promise.race(promises).then(({ horse, time }) => {
+//     refs.winnerField.textContent = `And winner is ${horse}, finished in ${time} seconds`, 'color: green; font-size: 11px;'
+//     });
+    
+//     Promise.all(promises).then(() => {
+//     refs.progressField.textContent = 'Race finished. Bids are allowed'
+// });
+// });
+
+
+
+
+// function run(horse) {
+//     return new Promise((resolve) => {
+//         const time = getRandomTime(2000, 3500);
+
+//         setTimeout(() => {
+//             resolve({horse, time})
+//         }, time)
+//     })
+// };
+
+// function getRandomTime(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1) + min);
+// };
+
+// // IPPODROME INTO HTML (but cleaning start button function)
+
+// const horses = [
+//     'Tsok-Tsok',
+//     'Secretariat',
+//     'Eclipse',
+//     'West Australian',
+//     'Flying Fox',
+//     'Seabisquit',
+//     'Vista'
+// ];
+
+// const refs = {
+//     startBtn: document.querySelector('.js-race-btn'),
+//     winnerField: document.querySelector('.js-winner'),
+//     progressField: document.querySelector('.js-progress'),
+//     tableBody: document.querySelector('.js-results-table > tbody'),
+// };
+
+// refs.startBtn.addEventListener('click', () => {
+//     const promises = horses.map(run);
+
+//     updateWinnerField('');
+
+//     updateProgressField('Race started. Bids are disabled');
+
+//     Promise.race(promises).then(({ horse, time }) => {
+//         updateWinnerField(`And winner is ${horse}, finished in ${time} seconds`);
+//         updateResultTable({horse, time})
+//     });
+    
+//     Promise.all(promises).then(() => {
+//     updateProgressField('Race finished. Bids are allowed')
+// });
+// });
+
+// function updateWinnerField(message) {
+//     refs.winnerField.textContent = message;
+// };
+
+// function updateProgressField(message) {
+//     refs.progressField.textContent = message;
+// };
+
+// function updateResultTable({horse, time}) {
+//     const tr = `<tr><td>0</td><td>${horse}</td><td>${time}</td></tr>`
+//     refs.tableBody.insertAdjacentHTML('beforeend', tr)
+// }
+
+
+// function run(horse) {
+//     return new Promise((resolve) => {
+//         const time = getRandomTime(2000, 3500);
+
+//         setTimeout(() => {
+//             resolve({horse, time})
+//         }, time)
+//     })
+// };
+
+// function getRandomTime(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1) + min);
+// };
+
+
+// IPPODROME INTO HTML (ще більше чистимо фкнкцію)
 
 const horses = [
     'Tsok-Tsok',
@@ -901,6 +1061,59 @@ const horses = [
     'Vista'
 ];
 
+const refs = {
+    startBtn: document.querySelector('.js-race-btn'),
+    winnerField: document.querySelector('.js-winner'),
+    progressField: document.querySelector('.js-progress'),
+    tableBody: document.querySelector('.js-results-table > tbody'),
+};
+
+refs.startBtn.addEventListener('click', onStart);
+
+let raceCounter = 0;
+
+function onStart() {
+    raceCounter += 1;
+    // он старт проходиться по масиву коней і для кожного коня запускає функцію run
+    // виходиться, ми робимо масив промісів
+    const promises = horses.map(run);
+
+    updateWinnerField('');
+
+    updateProgressField('Race started. Bids are disabled');
+
+    determineWiner(promises);
+
+    waitForAll(promises);
+};
+
+function determineWiner(horsesPromises) {
+     Promise.race(horsesPromises).then(({ horse, time }) => {
+        updateWinnerField(`And winner is ${horse}, finished in ${time} seconds`);
+        updateResultTable({horse, time, raceCounter})
+    });
+};
+
+function waitForAll(horsesPromises) {
+    Promise.all(horsesPromises).then(() => {
+    updateProgressField('Race finished. Bids are allowed')
+});
+}
+
+function updateWinnerField(message) {
+    refs.winnerField.textContent = message;
+};
+
+function updateProgressField(message) {
+    refs.progressField.textContent = message;
+};
+
+function updateResultTable({horse, time, raceCounter}) {
+    const tr = `<tr><td>${raceCounter}</td><td>${horse}</td><td>${time}</td></tr>`
+    refs.tableBody.insertAdjacentHTML('beforeend', tr)
+}
+
+// функція запускає гонку з одним конем
 function run(horse) {
     return new Promise((resolve) => {
         const time = getRandomTime(2000, 3500);
@@ -911,22 +1124,6 @@ function run(horse) {
     })
 };
 
-console.log(`%c Race started. Bids are disabled`, 'color: red; font-size: 11px;');
-
-const promises = horses.map(run);
-
 function getRandomTime(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
-
-Promise.race(promises).then(({ horse, time }) => {
-    console.log(`%c And winner is ${horse}, finished in ${time} seconds`, 'color: green; font-size: 11px;')
-});
-
-// // виводимо об'єкт із усіма промісами
-// Promise.all(promises).then(x => { console.log(x) });
-// // або виводимо в консоль повідомлення
-// // проміс олл чекає, поки виконаються всі проміси і тоді дає результат виконання всіх промісів
-Promise.all(promises).then(() => {
-    console.log(`%c Race finished. Bids are allowed`, 'color: blue; font-size: 11px;')
-});
