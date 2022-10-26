@@ -759,19 +759,174 @@
 
  
 
-// ONE MORE PROMISE
+// // ONE MORE PROMISE
 
-const makePromise = () => {
-    return new Promise((resolve, reject) => {
-        const passed = Math.random() > 0.5;
+// const makePromise = () => {
+//     return new Promise((resolve, reject) => {
+//         const passed = Math.random() > 0.5;
+//         setTimeout(() => {
+//             if (passed) {
+//                 resolve('hey, its resolve');
+//             }
+
+//             reject('doh, its reject');
+//         }, 2000);
+//     });
+// };
+
+// makePromise().then(result => console.log(result)).catch(error => console.log(error));
+
+
+// // IPPODROME
+
+// // // ЗАПУСКАЄМО ОДНОГО КОНЯ
+
+// console.log('Race started. Bids are disabled');
+
+// // console.log(`And winner is ${1}, finished in ${1} time`);
+
+// // console.log('Race finished. Bids are allowed');
+
+// function run(horse) {
+//     return new Promise((resolve) => {
+//         const time = getRandomTime(2000, 3500);
+
+//         // запускаємо таймаут із рандомним часом
+//         setTimeout(() => {
+//             // як резолв, повертаємо об'єкт із іменем коня і його часом
+//             resolve({horse, time})
+//         }, time)
+//     })
+// };
+
+
+// run('Tsok-Tsok')
+//     .then(x => console.log(x))
+//     .catch(e => console.log(e));
+
+// // функція, яка отримує мінімальний час, максимальний час і повертає рандомне число між ними
+// function getRandomTime(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1) + min);
+// };
+
+
+// // ЗАПУСКАЄМО ДЕКІЛЬКА ОДНОЧАСНО І ВИВОДИМО НАЙШВИДШОГО КОНЯ
+
+// const horses = [
+//     'Tsok-Tsok',
+//     'Secretariat',
+//     'Eclipse',
+//     'West Australian',
+//     'Flying Fox',
+//     'Seabisquit',
+//     'Vista'
+// ];
+
+// console.log('Race started. Bids are disabled');
+
+// // console.log(`And winner is ${1}, finished in ${1} time`);
+
+// // console.log('Race finished. Bids are allowed');
+
+// function run(horse) {
+//     return new Promise((resolve) => {
+//         const time = getRandomTime(2000, 3500);
+
+//         // запускаємо таймаут із рандомним часом
+//         setTimeout(() => {
+//             // як резолв, повертаємо об'єкт із іменем коня і його часом
+//             resolve({horse, time})
+//         }, time)
+//     })
+// };
+
+// // робимо масив промісів
+// // const promises = horses.map(horse => run(horse));
+// // це можна скоротити до такого:
+// const promises = horses.map(run);
+// // console.log(promises)
+
+// // функція, яка отримує мінімальний час, максимальний час і повертає рандомне число між ними
+// function getRandomTime(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1) + min);
+// };
+// // метод рейс очікує перший, найшвидший проміс і дає змогу до нього зачейнитись
+// Promise.race(promises).then(x=>(console.log(x)));
+
+
+// // ЗАПУСКАЄМО ДЕКІЛЬКА ОДНОЧАСНО І ВИВОДИМО НАЙШВИДШОГО КОНЯ З ДЕСТРУКТУРИЗАЦІЄЮ
+
+// const horses = [
+//     'Tsok-Tsok',
+//     'Secretariat',
+//     'Eclipse',
+//     'West Australian',
+//     'Flying Fox',
+//     'Seabisquit',
+//     'Vista'
+// ];
+
+// console.log('Race started. Bids are disabled');
+
+// function run(horse) {
+//     return new Promise((resolve) => {
+//         const time = getRandomTime(2000, 3500);
+
+//         setTimeout(() => {
+//             resolve({horse, time})
+//         }, time)
+//     })
+// };
+
+// const promises = horses.map(run);
+
+// function getRandomTime(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1) + min);
+// };
+
+// Promise.race(promises).then(({ horse, time }) => {
+//     console.log(`And winner is ${horse}, finished in ${time} seconds`)
+// });
+
+
+// ЗАПУСКАЄМО ДЕКІЛЬКА ОДНОЧАСНО І ВИВОДИМО ВСІХ КОНЕЙ
+
+const horses = [
+    'Tsok-Tsok',
+    'Secretariat',
+    'Eclipse',
+    'West Australian',
+    'Flying Fox',
+    'Seabisquit',
+    'Vista'
+];
+
+function run(horse) {
+    return new Promise((resolve) => {
+        const time = getRandomTime(2000, 3500);
+
         setTimeout(() => {
-            if (passed) {
-                resolve('hey, its resolve');
-            }
-
-            reject('doh, its reject');
-        }, 2000);
-    });
+            resolve({horse, time})
+        }, time)
+    })
 };
 
-makePromise().then(result=>console.log(result)).catch(error=>console.log(error))
+console.log(`%c Race started. Bids are disabled`, 'color: red; font-size: 11px;');
+
+const promises = horses.map(run);
+
+function getRandomTime(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+Promise.race(promises).then(({ horse, time }) => {
+    console.log(`%c And winner is ${horse}, finished in ${time} seconds`, 'color: green; font-size: 11px;')
+});
+
+// // виводимо об'єкт із усіма промісами
+// Promise.all(promises).then(x => { console.log(x) });
+// // або виводимо в консоль повідомлення
+// // проміс олл чекає, поки виконаються всі проміси і тоді дає результат виконання всіх промісів
+Promise.all(promises).then(() => {
+    console.log(`%c Race finished. Bids are allowed`, 'color: blue; font-size: 11px;')
+});
