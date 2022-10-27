@@ -23,11 +23,11 @@
 //     notification: document.querySelector('.js-alert'),
 // };
 
-// refs.notification.addEventListener('click', onNotsficationClck);
+// refs.notification.addEventListener('click', onNotificationClck);
 
 // showNotification();
 
-// function onNotsficationClck() {
+// function onNotificationClck() {
 //     hideNotification();
 //     clearTimeout(timeoutId);
 // };
@@ -302,7 +302,7 @@
 // };
 
 
-// // TIMER WITH HTML AN WITH CLASS
+// TIMER WITH HTML AN WITH CLASS
 
 // const refs = {
 //     startBtn: document.querySelector('button[data-action-start]'),
@@ -466,7 +466,7 @@
 // });
 
 
-// ERROR HANDLING
+// // ERROR HANDLING
 
 
 // const promise = new Promise((resolve, reject) => {
@@ -484,7 +484,7 @@
 // // якщо проміс виконався із результатом rejected, то catch  в кінці ланцюжка then буде ловити цю помилку
 // // як і всі інші помилки, які можуть виникнути на цьому ланцюжку
 // // це зручніше, ніж до кожного then прописувати і fulfilled i rejected
-// // тобто якщо на якомусь етапі виникає помилка, то ланцюжок переривається і результат перетається в catch
+// // тобто якщо на якомусь етапі виникає помилка, то ланцюжок переривається і результат передається в catch
 // // себто, ми в then опрацблвуємо лише успішне виконання проміса
 // // а неуспішне виносимо в catch (для прикладу можна розкоментувати ерору на 2 then)
 
@@ -494,7 +494,7 @@
 //         x => {
 //             console.log(x);
 
-//             throw new Error('error in 2nd "then"')
+//             // throw new Error('error in 2nd "then"')
         
 //             return 10;
 //         },)
@@ -661,8 +661,8 @@
 //     console.log(error);
 // };
 
-// використання промісів чистить наші функції, тому що вони не знають про той код, який їх викликає
-// але якщо нам потрібно опрацювати лише onSuccess, то для цього є статичний метод promise.Resolve:
+// // використання промісів чистить наші функції, тому що вони не знають про той код, який їх викликає
+// // але якщо нам потрібно опрацювати лише onSuccess, то для цього є статичний метод promise.Resolve:
 
 // const makeOrder = (dish, onSuccess) => {
 //     return Promise.resolve(`here yours ${dish}`)
@@ -924,7 +924,7 @@
 // });
 
 // // // виводимо об'єкт із усіма промісами
-// // Promise.all(promises).then(x => { console.log(x) });
+// Promise.all(promises).then(x => { console.log(x) });
 // // // або виводимо в консоль повідомлення
 // // // проміс олл чекає, поки виконаються всі проміси і тоді дає результат виконання всіх промісів
 // Promise.all(promises).then(() => {
@@ -959,7 +959,7 @@
 //     refs.progressField.textContent = 'Race started. Bids are disabled';
 
 //     Promise.race(promises).then(({ horse, time }) => {
-//     refs.winnerField.textContent = `And winner is ${horse}, finished in ${time} seconds`, 'color: green; font-size: 11px;'
+//     refs.winnerField.textContent = `And winner is ${horse}, finished in ${time} seconds`
 //     });
     
 //     Promise.all(promises).then(() => {
@@ -1113,7 +1113,7 @@ function updateResultTable({horse, time, raceCounter}) {
     refs.tableBody.insertAdjacentHTML('beforeend', tr)
 }
 
-// функція запускає гонку з одним конем
+// функція запускає гонки з одним конем
 function run(horse) {
     return new Promise((resolve) => {
         const time = getRandomTime(2000, 3500);
