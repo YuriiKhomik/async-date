@@ -759,22 +759,22 @@
 
  
 
-// // ONE MORE PROMISE
+// ONE MORE PROMISE
 
-// const makePromise = () => {
-//     return new Promise((resolve, reject) => {
-//         const passed = Math.random() > 0.5;
-//         setTimeout(() => {
-//             if (passed) {
-//                 resolve('hey, its resolve');
-//             }
+const makePromise = () => {
+    return new Promise((resolve, reject) => {
+        const passed = Math.random() > 0.5;
+        setTimeout(() => {
+            if (passed) {
+                resolve('hey, its resolve');
+            }
 
-//             reject('doh, its reject');
-//         }, 2000);
-//     });
-// };
+            reject('doh, its reject');
+        }, 2000);
+    });
+};
 
-// makePromise().then(result => console.log(result)).catch(error => console.log(error));
+makePromise().then(result => console.log(result)).catch(error => console.log(error));
 
 
 // // IPPODROME
@@ -1049,81 +1049,81 @@
 // };
 
 
-// IPPODROME INTO HTML (ще більше чистимо фкнкцію)
+// // IPPODROME INTO HTML (ще більше чистимо фкнкцію)
 
-const horses = [
-    'Tsok-Tsok',
-    'Secretariat',
-    'Eclipse',
-    'West Australian',
-    'Flying Fox',
-    'Seabisquit',
-    'Vista'
-];
+// const horses = [
+//     'Tsok-Tsok',
+//     'Secretariat',
+//     'Eclipse',
+//     'West Australian',
+//     'Flying Fox',
+//     'Seabisquit',
+//     'Vista'
+// ];
 
-const refs = {
-    startBtn: document.querySelector('.js-race-btn'),
-    winnerField: document.querySelector('.js-winner'),
-    progressField: document.querySelector('.js-progress'),
-    tableBody: document.querySelector('.js-results-table > tbody'),
-};
+// const refs = {
+//     startBtn: document.querySelector('.js-race-btn'),
+//     winnerField: document.querySelector('.js-winner'),
+//     progressField: document.querySelector('.js-progress'),
+//     tableBody: document.querySelector('.js-results-table > tbody'),
+// };
 
-refs.startBtn.addEventListener('click', onStart);
+// refs.startBtn.addEventListener('click', onStart);
 
-let raceCounter = 0;
+// let raceCounter = 0;
 
-function onStart() {
-    raceCounter += 1;
-    // он старт проходиться по масиву коней і для кожного коня запускає функцію run
-    // виходиться, ми робимо масив промісів
-    const promises = horses.map(run);
+// function onStart() {
+//     raceCounter += 1;
+//     // он старт проходиться по масиву коней і для кожного коня запускає функцію run
+//     // виходиться, ми робимо масив промісів
+//     const promises = horses.map(run);
 
-    updateWinnerField('');
+//     updateWinnerField('');
 
-    updateProgressField('Race started. Bids are disabled');
+//     updateProgressField('Race started. Bids are disabled');
 
-    determineWiner(promises);
+//     determineWiner(promises);
 
-    waitForAll(promises);
-};
+//     waitForAll(promises);
+// };
 
-function determineWiner(horsesPromises) {
-     Promise.race(horsesPromises).then(({ horse, time }) => {
-        updateWinnerField(`And winner is ${horse}, finished in ${time} seconds`);
-        updateResultTable({horse, time, raceCounter})
-    });
-};
+// function determineWiner(horsesPromises) {
+//      Promise.race(horsesPromises).then(({ horse, time }) => {
+//         updateWinnerField(`And winner is ${horse}, finished in ${time} seconds`);
+//         updateResultTable({horse, time, raceCounter})
+//     });
+// };
 
-function waitForAll(horsesPromises) {
-    Promise.all(horsesPromises).then(() => {
-    updateProgressField('Race finished. Bids are allowed')
-});
-}
+// function waitForAll(horsesPromises) {
+//     Promise.all(horsesPromises).then(() => {
+//     updateProgressField('Race finished. Bids are allowed')
+// });
+// }
 
-function updateWinnerField(message) {
-    refs.winnerField.textContent = message;
-};
+// function updateWinnerField(message) {
+//     refs.winnerField.textContent = message;
+// };
 
-function updateProgressField(message) {
-    refs.progressField.textContent = message;
-};
+// function updateProgressField(message) {
+//     refs.progressField.textContent = message;
+// };
 
-function updateResultTable({horse, time, raceCounter}) {
-    const tr = `<tr><td>${raceCounter}</td><td>${horse}</td><td>${time}</td></tr>`
-    refs.tableBody.insertAdjacentHTML('beforeend', tr)
-}
+// function updateResultTable({horse, time, raceCounter}) {
+//     const tr = `<tr><td>${raceCounter}</td><td>${horse}</td><td>${time}</td></tr>`
+//     refs.tableBody.insertAdjacentHTML('beforeend', tr)
+// }
 
-// функція запускає гонки з одним конем
-function run(horse) {
-    return new Promise((resolve) => {
-        const time = getRandomTime(2000, 3500);
+// // функція запускає гонки з одним конем
+// function run(horse) {
+//     return new Promise((resolve) => {
+//         const time = getRandomTime(2000, 3500);
 
-        setTimeout(() => {
-            resolve({horse, time})
-        }, time)
-    })
-};
+//         setTimeout(() => {
+//             resolve({horse, time})
+//         }, time)
+//     })
+// };
 
-function getRandomTime(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-};
+// function getRandomTime(min, max) {
+//     return Math.floor(Math.random() * (max - min + 1) + min);
+// };
